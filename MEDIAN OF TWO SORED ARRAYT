@@ -1,0 +1,32 @@
+double findMedianSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Size){
+    int total = nums1Size + nums2Size;
+    int half = total / 2;
+    if (total % 2 == 1) {
+        return findKth(nums1, nums1Size, nums2, nums2Size, half + 1);
+    } else {
+        return (findKth(nums1, nums1Size, nums2, nums2Size, half) + findKth(nums1, nums1Size, nums2, nums2Size, half + 1)) / 2.0;
+    }
+}
+
+double findKth(int* nums1, int nums1Size, int* nums2, int nums2Size, int k) {
+    if (nums1Size > nums2Size) {
+        return findKth(nums2, nums2Size, nums1, nums1Size, k);
+    }
+    if (nums1Size == 0) {
+        return nums2[k - 1];
+    }
+    if (k == 1) {
+        return fmin(nums1[0], nums2[0]);
+    }
+    
+    int partA = fmin(k / 2, nums1Size);
+    int partB = k - partA;
+    
+    if (nums1[partA - 1] < nums2[partB - 1]) {
+        return findKth(nums1 + partA, nums1Size - partA, nums2, nums2Size, k - partA);
+    } else if (nums1[partA - 1] > nums2[partB - 1]) {
+        return findKth(nums1, nums1Size, nums2 + partB, nums2Size - partB, k - partB);
+    } else {
+        return nums1[partA - 1];
+    }
+}
